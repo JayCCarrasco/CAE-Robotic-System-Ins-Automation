@@ -1,0 +1,99 @@
+############################
+# ENTORNOS VIRTUALES
+############################
+cae_env/
+cae_scientific/
+venv/
+.venv/
+env/
+
+############################
+# PYTHON
+############################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+############################
+# VARIABLES SENSIBLES
+############################
+.env
+*.env
+*.secret
+*.key
+*.token
+
+############################
+# DATOS Y LOGS
+############################
+data/
+logs/
+*.log
+*.csv
+*.bag
+*.db
+
+############################
+# CÓDIGO PRIVADO
+############################
+src_private/
+deployment/
+
+############################
+# PLC / INDUSTRIAL
+############################
+plc/
+firmware_private/
+*.st
+*.lad
+*.fbd
+*.scl
+
+############################
+# SIMULACIÓN PESADA
+############################
+*.mat
+*.npz
+*.h5
+*.pickle
+
+############################
+# BUILD / DIST
+############################
+build/
+dist/
+*.egg-info/
+
+############################
+# DOCKER
+############################
+docker-compose.override.yml
+
+############################
+# SO / EDITORES
+############################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+############################
+# ROS / ROBÓTICA
+############################
+devel/
+install/
+log/
+*.urdf
+*.xacro
+
+############################
+# RESULTADOS GENERADOS
+############################
+experiments/results/
+plots/
+outputs/
+
