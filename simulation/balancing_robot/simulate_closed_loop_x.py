@@ -4,7 +4,7 @@ from scipy.integrate import solve_ivp
 from dynamics import dynamics
 from pid_controller_x import PIDControllerX
 
-pid = PIDControllerX(Kp_theta = 125, Ki_theta = 0, Kd_theta = 15, Kp_x = 0.2, Kd_x = 0.05)
+pid = PIDControllerX(Kp_theta = 7418, Ki_theta = 0, Kd_theta = 249, Kp_x = 0.2, Kd_x = 0.067)
 y0 = [0.0, 0.0, 0.1, 0.0]
 
 def closed_loop(t, y):
