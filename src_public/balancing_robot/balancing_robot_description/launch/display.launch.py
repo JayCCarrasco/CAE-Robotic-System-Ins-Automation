@@ -4,8 +4,8 @@ from ament_index_python.packages import get_package_share_directory
 import os
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('balancing_robot')
-    urdf_path = os.path.join(pkg_share, 'description', 'urdf', 'balancing_robot.urdf')
+    pkg_share = get_package_share_directory('balancing_robot_description')
+    urdf_path = os.path.join(pkg_share, 'urdf', 'balancing_robot.urdf')
     rviz_config_path = os.path.join(pkg_share, 'launch', 'balancing_robot.rviz')
 
     return LaunchDescription([
