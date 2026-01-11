@@ -4,7 +4,12 @@ from scipy.integrate import solve_ivp
 from dynamics import dynamics
 from pid_controller_x import PIDControllerX
 
-pid = PIDControllerX(Kp_theta = 7418, Ki_theta = 0, Kd_theta = 249, Kp_x = 0.2, Kd_x = 0.067)
+# [77.81343703  8.50544776  4.99995538  1.99995165]
+#mejores (PID Tuning): Kp_theta = 7418, Ki_theta = 0, Kd_theta = 249, Kp_x = 0.2, Kd_x = 0.067 
+#mejores (Mezclando): Kp_theta = 77.81, Ki_theta = 0, Kd_theta = 8.5, Kp_x = 0.2, Kd_x = 0.067
+#mejores (GPT_pid_tuning): 
+
+pid = PIDControllerX(Kp_theta = 71.16, Ki_theta = 0, Kd_theta = 5.21, Kp_x = 0.095, Kd_x = 0.053)
 y0 = [0.0, 0.0, 0.1, 0.0]
 
 def closed_loop(t, y):
