@@ -8,7 +8,7 @@ Then calculates the action of the motors through the PID and publish them.*/
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "std_msgs/msg/float32.hpp"
+#include "std_msgs/msg/float64.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -42,10 +42,10 @@ public:
         // ----------------------------
         // Publicadores
         // ----------------------------
-        left_wheel_pub_ = this->create_publisher<std_msgs::msg::Float32>(
+        left_wheel_pub_ = this->create_publisher<std_msgs::msg::Float64>(
             "/left_wheel_effort", 10);
 
-        right_wheel_pub_ = this->create_publisher<std_msgs::msg::Float32>(
+        right_wheel_pub_ = this->create_publisher<std_msgs::msg::Float64>(
             "/right_wheel_effort", 10);
         // ----------------------------
         // Timer de control
@@ -90,7 +90,7 @@ private:
     }
 
     void publish_effort(double effort){
-        std_msgs::msg::Float32 msg;
+        std_msgs::msg::Float64 msg;
         msg.data = effort;
 
         left_wheel_pub_->publish(msg);
@@ -107,8 +107,8 @@ private:
 
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
 
-    rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr left_wheel_pub_;
-    rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr right_wheel_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr left_wheel_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr right_wheel_pub_;
 
     rclcpp::TimerBase::SharedPtr timer_;
 };
