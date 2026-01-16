@@ -20,7 +20,6 @@
         <plugin filename="libignition-gazebo-imu-system.so"
             name="ignition::gazebo::systems::Imu">
         </plugin>
-
         <light type="directional" name="sun">
             <cast_shadows>true</cast_shadows>
             <pose>0 0 10 0 0 0</pose>
@@ -180,8 +179,6 @@
                     <limit>
                         <lower>-1.79769e+308</lower>    <!--negative infinity-->
                         <upper>1.79769e+308</upper>     <!--positive infinity-->
-                        <effort>10.0</effort> 
-                        <velocity>20.0</velocity>
                     </limit>
                     <dynamics>
                         <damping>0.05</damping>
@@ -189,6 +186,11 @@
                     </dynamics>
                 </axis>
             </joint>
+            <plugin
+                filename="ignition-gazebo-apply-joint-force-system"
+                name="gz::sim::systems::ApplyJointForce">
+                <joint_name>left_wheel_joint</joint_name>
+            </plugin>
             <joint name='right_wheel_joint' type='revolute'>
                 <pose relative_to='right_wheel'/>
                 <parent>chassis</parent>
@@ -198,8 +200,6 @@
                     <limit>
                         <lower>-1.79769e+308</lower>    <!--negative infinity-->
                         <upper>1.79769e+308</upper>     <!--positive infinity-->
-                        <effort>10.0</effort> 
-                        <velocity>20.0</velocity>
                     </limit>
                     <dynamics>
                         <damping>0.05</damping>
@@ -208,55 +208,10 @@
                 </axis>
             </joint>
             <plugin
-                filename="libignition-gazebo-diff-drive-system.so"
-                name="ignition::gazebo::systems::DiffDrive">
-                <left_joint>left_wheel_joint</left_joint>
-                <right_joint>right_wheel_joint</right_joint>
-                <wheel_separation>0.15</wheel_separation>
-                <wheel_radius>0.05</wheel_radius>
-                <odom_publish_frequency>1</odom_publish_frequency>
-                <topic>cmd_vel</topic>
+                filename="ignition-gazebo-apply-joint-force-system"
+                name="gz::sim::systems::ApplyJointForce">
+                <joint_name>right_wheel_joint</joint_name>
             </plugin>
         </model>
-        <!-- Moving Forward-->
-        <plugin filename="libignition-gazebo-triggered-publisher-system.so"
-                name="ignition::gazebo::systems::TriggeredPublisher">
-            <input type="ignition.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">16777235</match>
-            </input>
-            <output type="ignition.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.5}, angular: {z: 0.0}
-            </output>
-        </plugin>
-        <!-- Moving Backward-->
-        <plugin filename="libignition-gazebo-triggered-publisher-system.so"
-                name="ignition::gazebo::systems::TriggeredPublisher">
-            <input type="ignition.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">16777237</match>
-            </input>
-            <output type="ignition.msgs.Twist" topic="/cmd_vel">
-                linear: {x: -0.5}, angular: {z: 0.0}
-            </output>
-        </plugin>
-        <!-- Rotating right-->
-        <plugin filename="libignition-gazebo-triggered-publisher-system.so"
-                name="ignition::gazebo::systems::TriggeredPublisher">
-            <input type="ignition.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">16777236</match>
-            </input>
-            <output type="ignition.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.0}, angular: {z: -0.5}
-            </output>
-        </plugin>
-        <!-- Rotating left-->
-        <plugin filename="libignition-gazebo-triggered-publisher-system.so"
-                name="ignition::gazebo::systems::TriggeredPublisher">
-            <input type="ignition.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">16777234</match>
-            </input>
-            <output type="ignition.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.0}, angular: {z: 0.5}
-            </output>
-        </plugin>
     </world>
 </sdf>

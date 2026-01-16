@@ -42,11 +42,13 @@ public:
         // ----------------------------
         // Publicadores
         // ----------------------------
+
         left_wheel_pub_ = this->create_publisher<std_msgs::msg::Float64>(
-            "/left_wheel_effort", 10);
+            "/model/balancing_robot/joint/left_wheel_joint/cmd_force", 10);
 
         right_wheel_pub_ = this->create_publisher<std_msgs::msg::Float64>(
-            "/right_wheel_effort", 10);
+            "/model/balancing_robot/joint/right_wheel_joint/cmd_force", 10);
+
         // ----------------------------
         // Timer de control
         // ----------------------------
@@ -91,8 +93,8 @@ private:
 
     void publish_effort(double effort){
         std_msgs::msg::Float64 msg;
-        msg.data = effort;
-
+        msg.data = effort * 0.05; //r = 0.05. Effort es fuerza y hay que pasar torque
+        //msg.data = effort;
         left_wheel_pub_->publish(msg);
         right_wheel_pub_->publish(msg);
     }
