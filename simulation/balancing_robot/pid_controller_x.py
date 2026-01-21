@@ -28,6 +28,7 @@ class PIDControllerX:
 
         F = (self.Kp_theta * theta_error +
              self.Ki_theta * self.integral_theta +
-             self.Kd_theta * theta_dot)
+             self.Kd_theta * derivative)
+             #self.Kd_theta * theta_dot)
         F = np.clip(F, -Fmax, Fmax)
         return F

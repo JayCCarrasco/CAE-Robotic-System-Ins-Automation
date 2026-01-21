@@ -9,7 +9,7 @@ from pid_controller_x import PIDControllerX
 #mejores (Mezclando): Kp_theta = 77.81, Ki_theta = 0, Kd_theta = 8.5, Kp_x = 0.2, Kd_x = 0.067
 #mejores (GPT_pid_tuning): 
 
-pid = PIDControllerX(Kp_theta = 71.16, Ki_theta = 0, Kd_theta = 5.21, Kp_x = 0.095, Kd_x = 0.053)
+pid = PIDControllerX(Kp_theta = 63.92, Ki_theta = 0, Kd_theta = 5, Kp_x = 0.0115, Kd_x = 0.0722)
 y0 = [0.0, 0.0, 0.1, 0.0]
 
 def closed_loop(t, y):

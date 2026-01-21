@@ -10,5 +10,5 @@ class PIDController:
         self.integral += theta * dt
         derivative = (theta - self.prev_error) / dt
         self.prev_error = theta
-        F = self.Kp * theta + self.Ki * self.integral + self.Kd * theta_dot
+        F = self.Kp * theta + self.Ki * self.integral + self.Kd * theta_dot #self.Kd * theta_dot
         return F 
