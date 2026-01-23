@@ -1,0 +1,53 @@
+teleop_keyboard_node:
+  ros__parameters:
+
+    # Topic de salida
+    cmd_vel_topic: "/cmd_vel"
+
+    # Frecuencia de publicación (Hz)
+    publish_rate: 20.0
+
+    # Escalados máximos
+    scale_linear:
+      x: 0.5        # m/s
+      y: 0.0
+      z: 0.0
+
+    scale_angular:
+      x: 0.0
+      y: 0.0
+      z: 1.2        # rad/s
+
+    # Incrementos por pulsación de tecla
+    step_linear:
+      x: 0.05
+      y: 0.0
+      z: 0.0
+
+    step_angular:
+      x: 0.0
+      y: 0.0
+      z: 0.1
+
+    # Saturaciones (seguridad)
+    max_linear:
+      x: 0.6
+      y: 0.0
+      z: 0.0
+
+    max_angular:
+      x: 0.0
+      y: 0.0
+      z: 1.5
+
+    # Decaimiento automático si no se pulsa nada
+    enable_deadman: true
+    deadman_timeout: 0.5   # segundos
+
+    # Teclas (conceptuales, no físicas)
+    key_mapping:
+      forward: "w"
+      backward: "s"
+      left: "a"
+      right: "d"
+      stop: "space"

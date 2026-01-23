@@ -1,0 +1,19 @@
+/**:
+  ros__parameters:
+
+    # Ejes del joystick
+    axis_linear.x: 1
+    axis_angular.yaw: 0
+
+    # Escalas normales
+    scale_linear.x: 0.3
+    scale_angular.yaw: 1.0
+
+    # Turbo (opcional)
+    scale_linear_turbo.x: 0.6
+    scale_angular_turbo.yaw: 2.0
+
+    # Botones
+    enable_button: 4          # LB por ejemplo
+    enable_turbo_button: 5    # RB por ejemplo
+    require_enable_button: true
