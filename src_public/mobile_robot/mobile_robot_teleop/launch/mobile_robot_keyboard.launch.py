@@ -18,7 +18,7 @@ def generate_launch_description():
             output='screen',
             emulate_tty=True,
             remappings=[
-                ('/cmd_vel', '/cmd_vel_manual')
+                ('/cmd_vel', '/cmd_vel_teleop')
             ]
         )
     ])
