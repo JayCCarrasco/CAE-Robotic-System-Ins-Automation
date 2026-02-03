@@ -24,11 +24,11 @@ public:
 		    "/scan", 10, std::bind(&SafetyMonitor::lidar_callback, this, _1));
 
 		imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
-		    "/imu", 10, std::bind(&SafetyMonitor::imu_callback, this, _1));
+		    "/demo/imu", 10, std::bind(&SafetyMonitor::imu_callback, this, _1));
 			
 		//Publisher
 		vel_safe_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
-		    "/cmd_vel_safe", 10);
+		    "/demo/cmd_vel", 10);
 			
 		timer_ = this->create_wall_timer(
 		    std::chrono::milliseconds(50),
