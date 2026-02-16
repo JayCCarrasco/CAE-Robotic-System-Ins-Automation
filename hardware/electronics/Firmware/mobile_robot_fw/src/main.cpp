@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "pins.h"
-#include "motors.h"
-#include "encoders.h"
+#include "motor.h"
+#include "encoder.h"
 #include "control.h"
 #include <Wire.h>
 
@@ -14,6 +14,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println("Mobile Robot Firmware START");
 
+    digitalWrite(STDBY, HIGH);
     r_motor.init();
     l_motor.init();
     Serial.println("Motors initialized");

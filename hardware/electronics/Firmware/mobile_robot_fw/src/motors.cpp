@@ -1,4 +1,4 @@
-#include "motors.h"
+#include "motor.h"
 #include <Arduino.h>
 
 Motor :: Motor(uint8_t pwm_pin, uint8_t in1_pin, uint8_t in2_pin) :
