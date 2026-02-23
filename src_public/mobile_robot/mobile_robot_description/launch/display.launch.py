@@ -4,6 +4,7 @@ from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import TimerAction
 import os
 
 def generate_launch_description():
@@ -15,7 +16,8 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': Command(['xacro ', LaunchConfiguration('model')])}]
+        parameters=[{'robot_description': Command(['xacro ', LaunchConfiguration('model')]),
+        'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     joint_state_publisher_node = Node(
@@ -31,9 +33,10 @@ def generate_launch_description():
         name='rviz2',
         output='screen',
         arguments=['-d', LaunchConfiguration('rvizconfig')],
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
-    spawn_entity = Node(
+    spawn_entity_node = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
         arguments=['-entity', 'sam_bot', '-topic', 'robot_description'],
@@ -48,6 +51,12 @@ def generate_launch_description():
         parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
+    
+    spawn = TimerAction(
+        period=5.0,  # segundos
+        actions=[spawn_entity_node]
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument(name='model', default_value=default_model_path, description='Absolute path to robot model file'),
         DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path, description='Absolute path to rviz config file'),
@@ -55,7 +64,7 @@ def generate_launch_description():
         ExecuteProcess(cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_path], output='screen'),
         joint_state_publisher_node,
         robot_state_publisher_node,
-        spawn_entity,
+        spawn,
         robot_localization_node,
         rviz_node
     ])
