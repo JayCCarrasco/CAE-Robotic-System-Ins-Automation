@@ -16,9 +16,9 @@ using namespace std::chrono_literals;
 class BalancingRobotPID : public rclcpp::Node {
 public:
     BalancingRobotPID() : Node("balancing_robot_pid"){
-        kp_ = this->declare_parameter("kp", 40);
+        kp_ = this->declare_parameter("kp", 50);
         ki_ = this->declare_parameter("ki", 1.0);
-        kd_ = this->declare_parameter("kd", 10.0);
+        kd_ = this->declare_parameter("kd", 8.5);
         kp_x_ = this->declare_parameter("kp_x", 0.1155);
         kd_x_ = this->declare_parameter("kd_x", 0.072);
 
@@ -98,7 +98,7 @@ private:
 
     void publish_effort(double effort){
         std_msgs::msg::Float64 msg;
-        msg.data = effort;//r = 0.05. Effort es fuerza y hay que pasar torque
+        msg.data = effort*0.05;//r = 0.05. Effort es fuerza y hay que pasar torque
         //msg.data = effort;
         left_wheel_pub_->publish(msg);
         right_wheel_pub_->publish(msg);
