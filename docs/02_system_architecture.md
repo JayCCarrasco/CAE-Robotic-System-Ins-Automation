@@ -9,7 +9,7 @@
 
 #### Architecture diagram
 
-    ![Mobile robot ROS2 architecture diagram](images/MR_ROS2_ARCHITECTURE.png)
+    ![Mobile robot ROS2 architecture diagram](/images/MR_ROS2_ARCHITECTURE.png)
 
 
 #### Nodes
