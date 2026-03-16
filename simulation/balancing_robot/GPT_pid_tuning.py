@@ -4,15 +4,15 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.integrate import solve_ivp
 
-#from pid_controller_x import PIDControllerX
-from pid_controller import PIDController
-from dynamics import dynamics
+from pid_controller_x import PIDControllerX
+#from pid_controller import PIDController
+from dynamics_nonlinear import dynamics
 
 # -----------------------------
 # Parámetros de simulación
 # -----------------------------
 T_END = 3.0
-N_STEPS = 3000
+N_STEPS = 500
 t_eval = np.linspace(0.0, T_END, N_STEPS)
 
 # Condiciones iniciales (puedes añadir más luego)
@@ -31,21 +31,21 @@ def cost(u):
     # Desnormalización de ganancias
     Kp_t = 50  + 150 * u[0]
     Kd_t = 5   + 45  * u[1]
-    #Kp_x = 1.0 * u[2]
-    #Kd_x = 0.1 * u[3]
+    Kp_x = 1.0 * u[2]
+    Kd_x = 0.1 * u[3]
 
     total_cost = 0.0
 
     for y0 in initial_conditions:
 
-        #pid = PIDControllerX(
-        #    Kp_theta=Kp_t, Ki_theta=0.0, Kd_theta=Kd_t,
-        #    Kp_x=Kp_x, Kd_x=Kd_x
-        #)
-
-        pid = PIDController(
-            Kp=Kp_t, Ki =0.0, Kd=Kd_t
+        pid = PIDControllerX(
+            Kp_theta=Kp_t, Ki_theta=0.0, Kd_theta=Kd_t,
+            Kp_x=Kp_x, Kd_x=Kd_x
         )
+
+        #pid = PIDController(
+        #    Kp=Kp_t, Ki =0.0, Kd=Kd_t
+        #)
 
         last_t = None
         F_log = []
@@ -56,19 +56,19 @@ def cost(u):
             dt = 0.0 if last_t is None else t - last_t
             last_t = t
 
-            #F = pid.update(
-            #    x=y[0],
-            #    x_dot=y[1],
-            #    theta=y[2],
-            #    theta_dot=y[3],
-            #    dt=dt
-            #)
-
             F = pid.update(
+                x=y[0],
+                x_dot=y[1],
                 theta=y[2],
                 theta_dot=y[3],
                 dt=dt
             )
+
+            #F = pid.update(
+            #    theta=y[2],
+            #    theta_dot=y[3],
+            #    dt=dt
+            #)
 
             F_log.append(F)
             return dynamics(t, y, F)
@@ -134,17 +134,17 @@ res = minimize(
 # -----------------------------
 u_opt = res.x
 
-#K_opt = {
-#    "Kp_theta": 50  + 150 * u_opt[0],
-#    "Kd_theta": 5   + 45  * u_opt[1],
-#    "Kp_x":     1.0 * u_opt[2],
-#    "Kd_x":     0.1 * u_opt[3],
-#}
-
 K_opt = {
     "Kp_theta": 50  + 150 * u_opt[0],
     "Kd_theta": 5   + 45  * u_opt[1],
+    "Kp_x":     1.0 * u_opt[2],
+    "Kd_x":     0.1 * u_opt[3],
 }
+
+#K_opt = {
+#    "Kp_theta": 50  + 150 * u_opt[0],
+#    "Kd_theta": 5   + 45  * u_opt[1],
+#}
 
 print("\nGanancias óptimas:")
 for k, v in K_opt.items():

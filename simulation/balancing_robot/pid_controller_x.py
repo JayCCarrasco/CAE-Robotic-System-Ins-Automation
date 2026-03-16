@@ -1,7 +1,7 @@
 import numpy as np
 
 class PIDControllerX:
-    def __init__(self, Kp_theta, Ki_theta, Kd_theta, Kp_x, Kd_x):
+    def __init__(self, Kp_theta, Ki_theta, Kd_theta, Kp_x, Ki_x, Kd_x):
         # PID del ángulo
         self.Kp_theta = Kp_theta
         self.Ki_theta = Ki_theta
@@ -11,19 +11,31 @@ class PIDControllerX:
         
         # PID de la posición
         self.Kp_x = Kp_x
+        self.Ki_x = Ki_x
         self.Kd_x = Kd_x
+        self.integral_x = 0.0
 
     def update(self, x, x_dot, theta, theta_dot, dt, x_ref=0.0):
         # Limit max force of the robot
-        Fmax = 20
+        Fmax = 40
 
-        # PID de la posición → setpoint para θ
-        theta_ref = self.Kp_x * (x_ref - x) - self.Kd_x * x_dot
+        x_error = x_ref - x
+        self.integral_x += x_error * dt
+
+        # posición -> referencia de ángulo
+        theta_ref = (
+            self.Kp_x * x_error
+            + self.Ki_x * self.integral_x
+            - self.Kd_x * x_dot
+        )
+        
+        theta_ref = np.clip(theta_ref, -0.5, 0.5)
 
         # PID de ángulo
-        theta_error = theta - theta_ref
+        theta_error = -theta + theta_ref
         self.integral_theta += theta_error * dt
-        derivative = (theta_error - self.prev_theta_error) / dt
+        #derivative = (theta_error - self.prev_theta_error) / dt
+        derivative = -theta_dot
         self.prev_theta_error = theta_error
 
         F = (self.Kp_theta * theta_error +
