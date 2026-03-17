@@ -4,7 +4,7 @@ from scipy.integrate import solve_ivp
 from dynamics_nonlinear import dynamics
 from pid_controller_x import PIDControllerX
 
-pid = PIDControllerX(Kp_theta = 120, Ki_theta = 0, Kd_theta = 18.0, Kp_x = 0.1, Ki_x = 0, Kd_x = 0.7)
+pid = PIDControllerX(Kp_theta = 100, Ki_theta = 0, Kd_theta = 40.0, Kp_x = 0.1, Ki_x = 0, Kd_x = 0.7)
 y0 = [0.0, 0.0, 0.1, 0.0]
 
 #def closed_loop(t, y):
@@ -21,7 +21,7 @@ def closed_loop(t, y):
     F = pid.update(y[0], y[1], y[2], y[3], dt)
     return dynamics(t, y, F)
 
-t_span = (0, 10)
+t_span = (0, 20)
 t_eval = np.linspace(*t_span, 500)
 sol = solve_ivp(closed_loop, t_span, y0, t_eval = t_eval)
 

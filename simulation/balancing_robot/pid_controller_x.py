@@ -38,7 +38,7 @@ class PIDControllerX:
         derivative = -theta_dot
         self.prev_theta_error = theta_error
 
-        F = (self.Kp_theta * theta_error +
+        F = -(self.Kp_theta * theta_error +
              self.Ki_theta * self.integral_theta +
              self.Kd_theta * derivative)
              #self.Kd_theta * theta_dot)
