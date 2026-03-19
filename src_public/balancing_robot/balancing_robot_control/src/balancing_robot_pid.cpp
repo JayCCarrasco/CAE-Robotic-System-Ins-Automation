@@ -9,6 +9,7 @@ Then calculates the action of the motors through the PID and publish them.*/
 #include "sensor_msgs/msg/imu.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/float64.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -16,11 +17,11 @@ using namespace std::chrono_literals;
 class BalancingRobotPID : public rclcpp::Node {
 public:
     BalancingRobotPID() : Node("balancing_robot_pid"){
-        kp_ = this->declare_parameter("kp", 50);
-        ki_ = this->declare_parameter("ki", 1.0);
-        kd_ = this->declare_parameter("kd", 8.5);
-        kp_x_ = this->declare_parameter("kp_x", 0.1155);
-        kd_x_ = this->declare_parameter("kd_x", 0.072);
+        kp_ = this->declare_parameter("kp", 100);    //100
+        ki_ = this->declare_parameter("ki", 0.5);   //0.5
+        kd_ = this->declare_parameter("kd", 40);    //4
+        kp_x_ = this->declare_parameter("kp_x", 0.2);    //2.0
+        kd_x_ = this->declare_parameter("kd_x", 0.8);     //0.15
 
         control_frequency_ = this->declare_parameter("control_frequency", 200.0);
         dt_ = 1.0 / control_frequency_;
@@ -32,6 +33,9 @@ public:
         theta_dot_ = 0.0;
         theta_ref_ = 0.0;
 
+        x_ = 0.0; //18/03/2026 Comentado
+        x_dot_ = 0.0; //18/03/2026 Comentado
+
         error_ = 0.0;
         last_error_ = 0.0;
         integral_ = 0.0;
@@ -41,6 +45,9 @@ public:
         // ----------------------------
         imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
             "/imu", 10, std::bind(&BalancingRobotPID::imu_callback, this, _1));
+
+        joint_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+        "/joint_states", 10, std::bind(&BalancingRobotPID::joint_callback, this, _1));
         // ----------------------------
         // Publicadores
         // ----------------------------
@@ -75,30 +82,57 @@ private:
         theta_dot_ = msg->angular_velocity.y;
     }
 
+    void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+        double omega_left = 0.0;
+        double omega_right = 0.0;
+
+        for (size_t i = 0; i < msg->name.size(); ++i) {
+            if (msg->name[i] == "left_wheel_joint") {
+                omega_left = msg->velocity[i];
+            }
+            if (msg->name[i] == "right_wheel_joint") {
+                omega_right = msg->velocity[i];
+            }
+        }
+
+        double r = 0.05;
+        x_dot_ = r * (omega_left + omega_right) / 2.0;
+        x_ += x_dot_ * dt_;
+    }
+
     //void cmd_callback
 
     void control_loop(){
-        //double Fmax = 20.0;
+        double Fmax = 20.0;
         x_ref_ = 0.0;
 
-        //theta_ref = kp_x_ * (x_ref_ - x) - kd_x_ * x_dot
+        theta_ref_ = kp_x_ * (x_ref_ - x_) - kd_x_ * x_dot_; //18/03/2026 Comentado
 
-        error_ = theta_;
+        error_ = theta_ref_-theta_; //18/03/2026 theta
 
         integral_ += error_ * dt_;
         //double derivative_ = (error_ - last_error_) / dt_;
         last_error_ = error_;
 
-        double effort = (kp_ * error_ +
-                    ki_ * integral_+
+        double effort = -(kp_ * error_ +
+                    ki_ * integral_-   //18/03/2026     cambiamos de + a -
                     kd_ * theta_dot_);
-        
+
+        if (effort > Fmax) {
+            effort = Fmax;
+            integral_ -= error_ * dt_;  // anti-windup
+        }
+        if (effort < -Fmax) {
+            effort = -Fmax;
+            integral_ -= error_ * dt_;  // anti-windup
+        }
+
         publish_effort(effort);
     }
 
     void publish_effort(double effort){
         std_msgs::msg::Float64 msg;
-        msg.data = effort*0.05;//r = 0.05. Effort es fuerza y hay que pasar torque
+        msg.data = effort;//r = 0.05. Effort es fuerza y hay que pasar torque
         //msg.data = effort;
         left_wheel_pub_->publish(msg);
         right_wheel_pub_->publish(msg);
@@ -111,8 +145,10 @@ private:
     double error_, last_error_, integral_;
 
     double theta_, theta_dot_, theta_ref_, x_ref_;
+    double x_, x_dot_;    //18/03/2026 Comentado
 
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_sub_;
 
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr left_wheel_pub_;
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr right_wheel_pub_;

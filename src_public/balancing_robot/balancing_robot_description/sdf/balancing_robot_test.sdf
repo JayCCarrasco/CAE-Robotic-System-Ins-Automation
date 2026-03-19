@@ -95,7 +95,7 @@
                 </collision>
 				<sensor name="imu_sensor" type="imu">
 					<always_on>1</always_on>
-					<update_rate>1</update_rate>
+					<update_rate>200</update_rate>  <!--estaba a 1-->
 					<visualize>true</visualize>
 					<topic>imu</topic>
 				</sensor>
@@ -211,6 +211,10 @@
                 filename="ignition-gazebo-apply-joint-force-system"
                 name="gz::sim::systems::ApplyJointForce">
                 <joint_name>right_wheel_joint</joint_name>
+            </plugin>
+            <plugin
+                filename="libignition-gazebo-joint-state-publisher-system.so"
+                name="ignition::gazebo::systems::JointStatePublisher">
             </plugin>
         </model>
     </world>
