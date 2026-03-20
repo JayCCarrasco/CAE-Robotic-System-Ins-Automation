@@ -1,0 +1,14 @@
+# Goal
+bool start
+
+---
+# Result
+bool success
+string final_state
+string message
+
+---
+# Feedback
+string current_state
+float32 progress
+string last_event

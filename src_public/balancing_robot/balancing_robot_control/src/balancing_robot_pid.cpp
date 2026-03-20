@@ -19,9 +19,9 @@ public:
     BalancingRobotPID() : Node("balancing_robot_pid"){
         kp_ = this->declare_parameter("kp", 100);    //100
         ki_ = this->declare_parameter("ki", 0.5);   //0.5
-        kd_ = this->declare_parameter("kd", 40);    //4
-        kp_x_ = this->declare_parameter("kp_x", 0.2);    //2.0
-        kd_x_ = this->declare_parameter("kd_x", 0.8);     //0.15
+        kd_ = this->declare_parameter("kd", 4);    //4
+        kp_x_ = this->declare_parameter("kp_x", 2);    //2.0
+        kd_x_ = this->declare_parameter("kd_x", 0.15);     //0.15
 
         control_frequency_ = this->declare_parameter("control_frequency", 200.0);
         dt_ = 1.0 / control_frequency_;
