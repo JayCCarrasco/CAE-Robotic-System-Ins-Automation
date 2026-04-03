@@ -1,23 +1,21 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>robotic_arm_hmi_interface</name>
+  <name>robotic_arm_task_manager</name>
   <version>0.0.0</version>
-  <description>Interface between HMI and robotic arm</description>
+  <description>Robotic arm task manager</description>
   <maintainer email="JayCCarrasco@users.noreply.github.com">juancarlos</maintainer>
   <license>Apache-License2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
   <depend>robot_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>
-
 
   <export>
     <build_type>ament_cmake</build_type>

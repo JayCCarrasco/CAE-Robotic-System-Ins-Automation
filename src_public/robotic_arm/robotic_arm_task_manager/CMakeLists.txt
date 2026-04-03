@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(robotic_arm_hmi_interface)
+project(robotic_arm_task_manager)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -9,11 +9,10 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(robot_interfaces REQUIRED)
 
-add_executable(hmi_interface src/hmi_interface.cpp)
-ament_target_dependencies(hmi_interface rclcpp std_msgs rclcpp_action robot_interfaces)
+add_executable(task_manager src/task_manager.cpp)
+ament_target_dependencies(task_manager rclcpp rclcpp_action robot_interfaces)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -28,7 +27,7 @@ if(BUILD_TESTING)
 endif()
 
 install(TARGETS
-  hmi_interface
+  task_manager
   DESTINATION lib/${PROJECT_NAME}
 )
 
