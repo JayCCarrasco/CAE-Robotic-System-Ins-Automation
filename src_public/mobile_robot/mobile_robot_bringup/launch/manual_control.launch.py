@@ -7,9 +7,9 @@ def generate_launch_description():
      #   package='teleop_twist_keyboard',
       #  executable='teleop_twist_keyboard',
        # name='teleop_keyboard',
-      #  output='screen',
-     #   emulate_tty=True,
-      #  remappings=[('/cmd_vel', '/cmd_vel_teleop')]
+        #output='screen',
+        #emulate_tty=True,
+        #remappings=[('/cmd_vel', '/cmd_vel_teleop')]
     #)
 
     control_mode_manager_node = Node(
