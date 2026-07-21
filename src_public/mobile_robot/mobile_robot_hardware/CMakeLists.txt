@@ -23,3 +23,10 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+
+add_executable(serial_bridge src/serial_bridge.cpp)
+
+ament_target_dependencies(serial_bridge rclcpp geometry_msgs)
+
+install(TARGETS serial_bridge
+  DESTINATION lib/${PROJECT_NAME})
