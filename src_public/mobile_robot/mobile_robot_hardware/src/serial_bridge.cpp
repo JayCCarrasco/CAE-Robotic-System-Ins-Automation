@@ -20,6 +20,8 @@ class SerialBridge : public rclcpp::Node {
             port_ = "dev/ttyUSB0";
             baudrate_ = B115200;
 
+            open_serial_port();
+
             RCLCPP_INFO(this->get_logger(),"Serial bridge node started");
         }
 
