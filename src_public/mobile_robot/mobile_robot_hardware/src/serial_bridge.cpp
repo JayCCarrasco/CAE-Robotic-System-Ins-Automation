@@ -17,7 +17,7 @@ class SerialBridge : public rclcpp::Node {
             std::bind(&SerialBridge::cmd_vel_callback, this, _1));
 
             serial_fd_ = -1;
-            port_ = "dev/ttyUSB0";
+            port_ = "/dev/ttyUSB0";
             baudrate_ = B115200;
 
             open_serial_port();
@@ -46,9 +46,61 @@ class SerialBridge : public rclcpp::Node {
 
                 return false;
             }
+            
+            //Declaring termios struct
+            struct termios tty;
+
+            //checking if copying struct from serial_fd was fine
+            if (tcgetattr(serial_fd_, &tty) != 0){
+                RCLCPP_ERROR(this->get_logger(), "Failed to get serial attributes %s", strerror(errno));
+                
+                close(serial_fd_);
+                serial_fd_ = -1;
+
+                return false;
+            }
+
+            //setting baudrates
+            cfsetospeed(&tty, baudrate_);
+            cfsetispeed(&tty, baudrate_);
+
+            //setting device control from serial port
+            // REMEMBER:
+            //&= ~ for deactivate bit
+            //|= for activate bit
+            tty.c_cflag &= ~PARENB;     
+            tty.c_cflag &= ~CSTOPB;
+            tty.c_cflag &= ~CSIZE;
+            tty.c_cflag |= CS8;
+
+            //Activating receptor and local mode
+            tty.c_cflag |= (CLOCAL | CREAD);
+
+            //Deactivating hardware flow control
+            tty.c_cflag &= ~CRTSCTS;
+            
+            //Deactivating software flow control
+            tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+            tty.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+
+            //Deactivating exit process
+            tty.c_oflag &= ~OPOST;
+
+            //Configure control characters
+            tty.c_cc[VMIN] = 0;
+            tty.c_cc[VTIME] = 10;
+            
+            if(tcsetattr(serial_fd_, TCSANOW, &tty) != 0){
+                RCLCPP_ERROR(this->get_logger(), "Failed to set serial attributes: %s", strerror(errno));
+                
+                close(serial_fd_);
+                serial_fd_ = -1;
+
+                return false;
+            }
 
             RCLCPP_INFO(
-                this->get_logger(), "Serial port %s opened succesfully", port_.c_str());
+                this->get_logger(), "Serial port %s configured succesfully", port_.c_str());
             
             return true;
         }
