@@ -36,6 +36,18 @@ class SerialBridge : public rclcpp::Node {
                 "Linear: %.3f Angular: %.3f",
                 msg->linear.x,
                 msg->angular.z);
+            
+            std::string cmd = "V," + 
+                std::to_string(msg->linear.x) +
+                "," + std::to_string(msg->angular.z) + "\n";
+            
+            ssize_t bytes_written = write(serial_fd_, cmd.c_str(), cmd.size());
+            
+            if (bytes_written < 0){
+                RCLCPP_ERROR(this->get_logger(), "Error writing to serial port %s", strerror(errno));
+            } else {
+                RCLCPP_INFO(this->get_logger(), "Sent: %s", cmd.c_str());
+            }
         }
 
         bool open_serial_port(){
