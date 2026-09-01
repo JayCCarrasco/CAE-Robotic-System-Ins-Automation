@@ -48,6 +48,18 @@ class SerialBridge : public rclcpp::Node {
             } else {
                 RCLCPP_INFO(this->get_logger(), "Sent: %s", cmd.c_str());
             }
+
+            char buffer[256];
+
+            ssize_t bytes_read = read(serial_fd_, buffer, sizeof(buffer) - 1);
+
+
+
+            if(bytes_read > 0){
+                buffer[bytes_read] = '\0';
+
+                RCLCPP_INFO(this->get_logger(), "Arduino %s", buffer);
+            }
         }
 
         bool open_serial_port(){
@@ -93,7 +105,7 @@ class SerialBridge : public rclcpp::Node {
             
             //Deactivating software flow control
             tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-            tty.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+            tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
 
             //Deactivating exit process
             tty.c_oflag &= ~OPOST;

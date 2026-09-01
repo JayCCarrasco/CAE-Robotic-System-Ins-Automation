@@ -58,6 +58,9 @@ public:
         right_wheel_pub_ = this->create_publisher<std_msgs::msg::Float64>(
             "/model/balancing_robot/joint/right_wheel_joint/cmd_force", 10);
 
+        effort_pub_ = this->create_publisher<std_msgs::msg::Float64>(
+            "/balancing_robot/effort", 10);
+
         // ----------------------------
         // Timer de control
         // ----------------------------
@@ -136,6 +139,7 @@ private:
         //msg.data = effort;
         left_wheel_pub_->publish(msg);
         right_wheel_pub_->publish(msg);
+        effort_pub_->publish(msg);
     }
 
     //vars
@@ -152,6 +156,7 @@ private:
 
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr left_wheel_pub_;
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr right_wheel_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr effort_pub_;
 
     rclcpp::TimerBase::SharedPtr timer_;
 };

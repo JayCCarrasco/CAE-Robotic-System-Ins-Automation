@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(balancing_robot_control)
+project(mr_dummy_action_interface)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,15 +7,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
-
-add_executable(balancing_robot_pid src/balancing_robot_pid.cpp)
-add_executable(data_logger src/data_logger.cpp)
-ament_target_dependencies(balancing_robot_pid rclcpp sensor_msgs geometry_msgs std_msgs)
-ament_target_dependencies(data_logger rclcpp sensor_msgs std_msgs)
-
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -28,14 +22,5 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-#Install executables
-install(TARGETS balancing_robot_pid
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(TARGETS data_logger
-  DESTINATION lib/${PROJECT_NAME}
-)
 
 ament_package()
