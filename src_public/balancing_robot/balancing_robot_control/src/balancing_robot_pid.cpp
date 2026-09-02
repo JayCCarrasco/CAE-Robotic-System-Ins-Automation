@@ -18,10 +18,10 @@ class BalancingRobotPID : public rclcpp::Node {
 public:
     BalancingRobotPID() : Node("balancing_robot_pid"){
         kp_ = this->declare_parameter("kp", 100);    //100
-        ki_ = this->declare_parameter("ki", 0.5);   //0.5
+        ki_ = this->declare_parameter("ki", 0.0);   //0.5
         kd_ = this->declare_parameter("kd", 4);    //4
-        kp_x_ = this->declare_parameter("kp_x", 2);    //2.0
-        kd_x_ = this->declare_parameter("kd_x", 0.15);     //0.15
+        kp_x_ = this->declare_parameter("kp_x", 0.1);  //2.0
+        kd_x_ = this->declare_parameter("kd_x", 0.05);     //0.15
 
         control_frequency_ = this->declare_parameter("control_frequency", 200.0);
         dt_ = 1.0 / control_frequency_;
@@ -47,7 +47,7 @@ public:
             "/imu", 10, std::bind(&BalancingRobotPID::imu_callback, this, _1));
 
         joint_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-        "/joint_states", 10, std::bind(&BalancingRobotPID::joint_callback, this, _1));
+        "/world/balancing_robot_world/model/balancing_robot/joint_state", 10, std::bind(&BalancingRobotPID::joint_callback, this, _1));
         // ----------------------------
         // Publicadores
         // ----------------------------
@@ -100,16 +100,26 @@ private:
 
         double r = 0.05;
         x_dot_ = r * (omega_left + omega_right) / 2.0;
-        x_ += x_dot_ * dt_;
+        //x_ += x_dot_ * dt_;
     }
 
     //void cmd_callback
 
     void control_loop(){
         double Fmax = 20.0;
+        double theta_max = 0.15;
         x_ref_ = 0.0;
 
-        theta_ref_ = kp_x_ * (x_ref_ - x_) - kd_x_ * x_dot_; //18/03/2026 Comentado
+        //theta_ref_ = kp_x_ * (x_ref_ - x_) - kd_x_ * x_dot_;
+        theta_ref_ = -kd_x_ * x_dot_;
+
+        if (theta_ref_ > theta_max){
+            theta_ref_ = theta_max;
+        }
+
+        if (theta_ref_ < -theta_max){
+            theta_ref_ = -theta_max;
+        }
 
         error_ = theta_ref_-theta_; //18/03/2026 theta
 
@@ -118,7 +128,7 @@ private:
         last_error_ = error_;
 
         double effort = -(kp_ * error_ +
-                    ki_ * integral_-   //18/03/2026     cambiamos de + a -
+                    ki_ * integral_ -   //18/03/2026     cambiamos de + a -
                     kd_ * theta_dot_);
 
         if (effort > Fmax) {

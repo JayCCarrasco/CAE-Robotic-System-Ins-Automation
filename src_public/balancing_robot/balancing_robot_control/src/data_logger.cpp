@@ -19,7 +19,7 @@ public:
             "/imu", 10, std::bind(&DataLogger::imu_callback, this, _1));
 
         joint_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-            "/joint_states", 10, std::bind(&DataLogger::joint_callback, this, _1));
+            "/world/balancing_robot_world/model/balancing_robot/joint_state", 10, std::bind(&DataLogger::joint_callback, this, _1));
 
         effort_sub_ = this->create_subscription<std_msgs::msg::Float64>(
             "/balancing_robot/effort", 10, std::bind(&DataLogger::effort_callback, this, _1));
