@@ -6,6 +6,10 @@
             <real_time_factor>1.0</real_time_factor>
         </physics>
         <plugin
+            filename="libignition-gazebo6-apply-link-wrench-system.so"
+            name="ignition::gazebo::systems::ApplyLinkWrench">
+        </plugin>
+        <plugin
             filename="libignition-gazebo-physics-system.so"
             name="ignition::gazebo::systems::Physics">
         </plugin>

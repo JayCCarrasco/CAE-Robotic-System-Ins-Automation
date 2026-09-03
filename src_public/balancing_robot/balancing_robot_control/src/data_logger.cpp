@@ -35,7 +35,7 @@ public:
                 this->get_logger(),
                 "Could not open dataset file");
         }
-        file_ << "timestamp, theta, theta_dot, x, x_dot, effort\n";
+        file_ << "timestamp,theta,theta_dot,x,x_dot,effort\n";
     }
 
     ~DataLogger(){
@@ -83,12 +83,21 @@ private:
     }
 
     void log_data(){
-        x_ += x_dot_ * dt_;
 
         auto now = this->get_clock()->now();
+        int64_t timestamp_ns = now.nanoseconds();
+
+        double dt = 0.0;
+
+        if (last_timestamp_ns_ != 0) {
+            dt = (timestamp_ns - last_timestamp_ns_) * 1e-9;
+            x_ += x_dot_ * dt;
+        }
+
+        last_timestamp_ns_ = timestamp_ns;
 
         file_
-            << now.seconds() << ","
+            << timestamp_ns << ","
             << theta_ << ","
             << theta_dot_ << ","
             << x_ << ","
@@ -104,6 +113,7 @@ private:
     double x_dot_ = 0;
     double dt_ = 1.0/200.0;
     double effort_ = 0;
+    int64_t last_timestamp_ns_ = 0;
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_sub_;
     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr effort_sub_;
