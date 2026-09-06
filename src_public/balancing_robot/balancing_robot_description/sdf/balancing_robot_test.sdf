@@ -202,8 +202,8 @@
                 <axis>
                     <xyz expressed_in='__model__'>0 1 0</xyz>
                     <limit>
-                        <lower>-1.79769e-16</lower>    <!--negative infinity-->
-                        <upper>1.79769e+16</upper>     <!--positive infinity-->
+                        <lower>-1.79769e+308</lower>    <!--negative infinity-->
+                        <upper>1.79769e+308</upper>     <!--positive infinity-->
                     </limit>
                     <dynamics>
                         <damping>0.05</damping>
