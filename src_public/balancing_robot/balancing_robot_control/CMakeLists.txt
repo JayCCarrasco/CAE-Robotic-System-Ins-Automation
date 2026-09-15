@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 add_executable(balancing_robot_pid src/balancing_robot_pid.cpp)
 add_executable(data_logger src/data_logger.cpp)
@@ -35,6 +36,12 @@ install(TARGETS balancing_robot_pid
 )
 
 install(TARGETS data_logger
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  PROGRAMS
+    src/balancing_robot_nn.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
